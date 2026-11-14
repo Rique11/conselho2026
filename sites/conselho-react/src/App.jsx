@@ -225,9 +225,9 @@ function App() {
         <section className="chapter chapter--red section-pad" aria-labelledby="cap4">
           <div className="chapter__number reveal">04</div>
           <div className="chapter__intro reveal">
-            <p className="kicker">Nem tudo foi foto bonita</p>
-            <h2 id="cap4">Teve coisa que deu errado.<br />E teve gente que <span>ficou.</span></h2>
-            <p>A gente reviu rota, alinhou expectativa, chamou para a conversa e seguiu. Não porque foi simples, mas porque ainda tinha algo que valia construir junto.</p>
+            <p className="kicker">Nem tudo saiu como planejado</p>
+            <h2 id="cap4">Teve rota refeita.<br />E muita coisa <span>aprendida.</span></h2>
+            <p>Entre decisões, ajustes e conversas sinceras, o Conselho foi encontrando seu jeito de fazer melhor. Nem sempre era sobre ter a resposta certa — às vezes era sobre fazer a pergunta que precisava ser feita.</p>
           </div>
           <figure className="full-photo reveal">
             <img src="/assets/abraco.jpg" loading="lazy" alt="Integrantes do conselho reunidos em um abraço coletivo" />
