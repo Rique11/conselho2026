@@ -15,6 +15,18 @@ const memories = [
   { src: '/assets/historias.jpg', alt: 'Cartões escritos ao lado de uma bandeira', className: 'memory--tall' },
 ]
 
+const rules = [
+  'Nosso forte é a união.',
+  'Temos muita história e respeitamos nosso legado.',
+  'Somos Pé Vermelho.',
+  'Metas são um conjunto de histórias a serem contadas.',
+  'Nosso primeiro compromisso é com o desenvolvimento.',
+  'Juntos fazemos acontecer.',
+  'Estamos em constante evolução.',
+  'Trabalhamos e performamos por um Núcleo de Excelência.',
+  'Lideramos pelo exemplo.',
+]
+
 function useScrollProgress() {
   const [progress, setProgress] = useState(0)
 
@@ -102,6 +114,82 @@ function TrioCarousel() {
             onClick={() => setCurrent(index)}
           />
         ))}
+      </div>
+    </div>
+  )
+}
+
+function RulesCarousel() {
+  const [perPage, setPerPage] = useState(() => (window.matchMedia('(max-width: 760px)').matches ? 1 : 3))
+  const [page, setPage] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const pageCount = Math.ceil(rules.length / perPage)
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px)')
+    const update = () => {
+      setPerPage(media.matches ? 1 : 3)
+      setPage(0)
+    }
+
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const timer = window.setInterval(() => {
+      setPage((current) => (current + 1) % pageCount)
+    }, 5200)
+    return () => window.clearInterval(timer)
+  }, [pageCount, paused])
+
+  const firstRule = page * perPage
+  const visibleRules = rules.slice(firstRule, firstRule + perPage)
+  const goToPage = (nextPage) => setPage((nextPage + pageCount) % pageCount)
+
+  return (
+    <div
+      className="rules-carousel reveal"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      <div
+        className="rules-carousel__viewport"
+        role="group"
+        aria-label={`Regras ${firstRule + 1} a ${firstRule + visibleRules.length} de ${rules.length}`}
+      >
+        <div className="rules__list" key={`${perPage}-${page}`}>
+          {visibleRules.map((rule, index) => {
+            const ruleIndex = firstRule + index
+            const tones = ['red', 'teal', 'lime', 'black']
+            return (
+              <article className={`rule rule--${tones[ruleIndex % tones.length]}`} key={rule}>
+                <span>RNN {String(ruleIndex + 1).padStart(2, '0')}</span>
+                <h3>{rule}</h3>
+              </article>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="rules-carousel__controls">
+        <button type="button" className="rules-carousel__arrow" onClick={() => goToPage(page - 1)} aria-label="Ver regras anteriores">←</button>
+        <div className="rules-carousel__dots" aria-label="Escolher grupo de regras">
+          {Array.from({ length: pageCount }, (_, index) => (
+            <button
+              key={index}
+              type="button"
+              className={index === page ? 'is-active' : ''}
+              aria-label={`Ver ${perPage === 1 ? `RNN ${index + 1}` : `grupo ${index + 1}`}`}
+              aria-pressed={index === page}
+              onClick={() => setPage(index)}
+            />
+          ))}
+        </div>
+        <button type="button" className="rules-carousel__arrow" onClick={() => goToPage(page + 1)} aria-label="Ver próximas regras">→</button>
       </div>
     </div>
   )
@@ -239,13 +327,9 @@ function App() {
           <div className="rules__title reveal">
             <p className="kicker">As regras não negociáveis</p>
             <h2 id="regras-title">As frases que lembravam o que importava.</h2>
+            <p className="rules__intro">Fomentar o empreendedorismo por meio de desenvolvimento, representatividade e suporte — fortalecendo a união da Rede Pé Vermelho em direção à excelência.</p>
           </div>
-          <div className="rules__list">
-            <article className="rule reveal"><span>RNN 01</span><h3>Nosso forte é a união.</h3></article>
-            <article className="rule reveal"><span>RNN 02</span><h3>Compromisso e constância.</h3></article>
-            <article className="rule reveal"><span>RNN 03</span><h3>Juntos pela excelência.</h3></article>
-            <article className="rule rule--wide reveal"><span>RNN 04</span><h3>Metas são um conjunto de histórias a serem contadas.</h3></article>
-          </div>
+          <RulesCarousel />
         </section>
 
         <section className="gallery-section section-pad" aria-labelledby="galeria-title">
